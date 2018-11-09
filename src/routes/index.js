@@ -1,6 +1,6 @@
 import express from 'express'
 import producstRoute from './products'
-const router = express.router()
+const router = express.Router()
 
 router.use('/products', producstRoute)
 router.get('/', (req, res) => {
