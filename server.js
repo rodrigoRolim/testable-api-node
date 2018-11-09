@@ -1,5 +1,8 @@
-import app from './src/app'
+import setupApp from './src/app'
 const port = process.env.PORT || 3000
-app.listen(port, () => {
+setupApp().then(app => app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
+})).catch(error => {
+  console.error(error)
+  process.exit(1)
 })
