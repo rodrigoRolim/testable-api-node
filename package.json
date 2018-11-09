@@ -19,6 +19,7 @@
     "coffeescript": "^2.3.2",
     "express": "4.16.4",
     "mocha": "5.2.0",
+    "mongoose": "5.3.10",
     "sinon": "7.1.1",
     "supertest": "3.3.0"
   }
