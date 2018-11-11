@@ -18,6 +18,14 @@ class ProductsController {
     const product = new this.Product(req.body)
     return product.save()
       .then(() => res.status(201).send(product))
+      .catch(err => res.status(422).send(err.message))
+  }
+  update(req, res) {
+    //res.sendStatus(200)
+    //return Promise.resolve()
+    return this.Product.findOneAndUpdate({ _id: req.params.id }, req.body)
+      .then(() => res.sendStatus(200))
+      .catch(err => res.status(422).send(err.message))
   }
 }
 

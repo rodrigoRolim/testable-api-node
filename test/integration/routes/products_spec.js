@@ -74,4 +74,35 @@ describe('Routes: Products', () => {
       })
     })
   })
+  describe('PUT /products/:id', () => {
+    context('when editing a product', () => {
+      it('should update the product and return 200 as status code', done => {
+        const customProduct = {
+          name: 'Custom name'
+        }
+        const updateProduct = Object.assign({}, customProduct, defaultProduct)
+
+        request
+          .put(`/products/${defaultId}`)
+          .send(updateProduct)
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
+  })
+  describe('DELETE /products/:id', () => {
+    context('when deleting a product', () => {
+      it('should delete a product and return 204 as status code', done => {
+
+        request
+          .delete(`/products/${defaultId}`)
+          .end((err, res) => {
+            expect(res.status).to.eql(204)
+            done(err)
+          })
+      })
+    })
+  })
 })
