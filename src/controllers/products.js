@@ -15,8 +15,9 @@ class ProductsController {
       .catch(err => res.status(400).send(err.message))
   }
   create(req, res) {
-    res.send(req.body)
-    return Promise.resolve()
+    const product = new this.Product(req.body)
+    return product.save()
+      .then(() => res.status(201).send(product))
   }
 }
 
