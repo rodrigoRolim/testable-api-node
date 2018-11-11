@@ -22,5 +22,8 @@
     "mongoose": "5.3.10",
     "sinon": "7.1.1",
     "supertest": "3.3.0"
+  },
+  "dependencies": {
+    "config": "^1.29.4"
   }
 }
