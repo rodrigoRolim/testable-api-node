@@ -4,14 +4,19 @@ class ProductsController {
     this.Product = Product
   }
   get(req, res) {
-    // return res.send([{
-    //   name: 'Default product',
-    //   description: 'product description',
-    //   price: 100
-    // }])
     return this.Product.find({})
         .then(products => res.send(products))
         .catch(err => res.status(400).send(err.message))
+  }
+  getById(req, res) {
+    const { params: { id } } = req
+    return this.Product.find({ _id: id })
+      .then(products => res.send(products))
+      .catch(err => res.status(400).send(err.message))
+  }
+  create(req, res) {
+    res.send(req.body)
+    return Promise.resolve()
   }
 }
 
