@@ -3,27 +3,28 @@ import sinon from 'sinon'
 import Product from '../../../src/models/products'
 describe('Controllers: Products', () => {
   const defaultProduct = [{
+    __v: 0,
+    _id: '56cb91bdc3464f14678934ca',
     name: 'Default product',
     description: 'product description',
     price: 100
   }]
+  const defaultRequest = {
+    params: {}
+  }
   describe('get() products', () => {
     it('should call send with a list of products', () => {
-      const request = {}
       const response = {
         send: sinon.spy()
       }
       Product.find = sinon.stub() 
-      //const productsControllers = new ProductsController()
-      //productsControllers.get(request, response)
+      
       Product.find.withArgs({}).resolves(defaultProduct)
       const productsControllers = new ProductsController(Product)
-      return productsControllers.get(request, response)
+      return productsControllers.get(defaultRequest, response)
           .then(() => {
             sinon.assert.calledWith(response.send, defaultProduct)
           })
-      //expect(response.send.called).to.be.true
-      //expect(response.send.calledWith(defaultProduct)).to.be.true
     })
     it('should return 400 when an error occurs', () => {
       const request = {}
@@ -40,6 +41,48 @@ describe('Controllers: Products', () => {
       return productsController.get(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, 'Error')
+        })
+    })
+  })
+  describe('getById()', () => {
+    it('should call send with one product', () => {
+      const fakeId = 'a-fake-id'
+      const request = {
+        params: {
+          id: fakeId
+        }
+      }
+      const response = {
+        send: sinon.spy()
+      }
+      Product.find = sinon.stub()
+      Product.find.withArgs({ _id: fakeId }).resolves(defaultProduct)
+      const productsController = new ProductsController(Product)
+
+      return productsController.getById(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, defaultProduct)
+        })
+    })
+  })
+  describe('create() product', () => {
+    it('should call send with new product', () => {
+      const requestWithBody = Object.assign({}, { body: defaultProduct[0] }, defaultRequest)
+      const response = {
+        send: sinon.spy(),
+        status: sinon.stub()
+      }
+      class fakeProduct {
+        save() {}
+      }
+      response.status.withArgs(201).returns(response)
+      sinon.stub(fakeProduct.prototype, 'save').withArgs().resolves()
+
+      const productsController = new ProductsController(fakeProduct)
+
+      return productsController.create(requestWithBody, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send)
         })
     })
   })
