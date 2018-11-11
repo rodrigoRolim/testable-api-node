@@ -171,4 +171,58 @@ describe('Controllers: Products', () => {
       })
     })
   })
+  describe('delete() product', () => {
+    it('should respond with 204 when the product id deleted', () => {
+      const fakeId = 'a-fake-id'
+      const request = {
+        params: {
+          id: fakeId
+        }
+      }
+      const response = {
+        sendStatus: sinon.spy()
+      }
+      class fakeProduct {
+        static remove() {}
+      }
+      const removeStub = sinon.stub(fakeProduct, 'remove')
+
+      removeStub.withArgs({ _id: fakeId }).resolves([1])
+
+      const productsController = new ProductsController(fakeProduct)
+
+      return productsController.remove(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 204)
+        })
+    })
+    context('when an error occurs', () => {
+      it('should return 400', () => {
+        const fakeId = 'a-fake-id'
+        const request = {
+          params: {
+            id: fakeId
+          }
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        class fakeProduct {
+          static remove() {}
+        }
+
+        const removeStub = sinon.stub(fakeProduct, 'remove')
+        removeStub.withArgs({ _id: fakeId }).rejects({ message: 'Error' })
+        response.status.withArgs(400).returns(response)
+
+        const productsController = new ProductsController(fakeProduct)
+
+        return productsController.remove(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
 })
